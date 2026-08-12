@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @apply bg-paper text-ink font-sans antialiased;
+  font-feature-settings: 'ss01', 'cv11', 'tnum';
+}
+
+::selection {
+  background: rgba(15, 118, 110, 0.18);
+}
+
+/* Section header — small caps, wide tracking */
+.eyebrow {
+  @apply text-micro uppercase tracking-[0.14em] text-ink-muted font-medium;
+}
+
+/* Tabular numbers for money/quantities */
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Neutral card — a paper surface with a hairline border, no shadow drama */
+.surface {
+  @apply bg-paper-card border border-line rounded;
+}
+
+/* Divider */
+.hairline {
+  @apply border-line;
+}
+
+/* Utility: hide scrollbar visually but keep scroll */
+.scroll-thin::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #d2d1cb; border-radius: 4px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+/* Focus ring — subtle, single accent, not glowing */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 1px;
+}
