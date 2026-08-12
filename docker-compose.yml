@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: inventra-db
+    environment:
+      POSTGRES_USER: inventra
+      POSTGRES_PASSWORD: inventra
+      POSTGRES_DB: inventra
+    ports:
+      - "5432:5432"
+    volumes:
+      - inventra-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventra"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ./backend
+    container_name: inventra-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Postgres: "Host=db;Port=5432;Database=inventra;Username=inventra;Password=inventra"
+      Jwt__Key: "please-change-this-key-in-any-real-deployment-2026"
+      Cors__AllowedOrigins__0: "http://localhost:3000"
+      ASPNETCORE_ENVIRONMENT: Production
+    ports:
+      - "5080:8080"
+
+  web:
+    build:
+      context: ./frontend
+    container_name: inventra-web
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: "http://api:8080"
+    ports:
+      - "3000:3000"
+
+volumes:
+  inventra-pg:
