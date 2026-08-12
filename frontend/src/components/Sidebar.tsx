@@ -39,9 +39,8 @@ export function Sidebar({ user }: { user: CurrentUser | null }) {
   return (
     <nav className="hidden md:flex flex-col w-56 shrink-0 border-r hairline bg-paper">
       <div className="h-14 flex items-center px-4 border-b hairline">
-        <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="w-6 h-6 rounded-sm bg-ink flex items-center justify-center text-paper text-[11px] font-semibold">I</span>
-          <span className="text-[15px] font-semibold tracking-tight">Inventra</span>
+        <Link href="/dashboard" className="text-[15px] font-semibold tracking-tight">
+          Inventra
         </Link>
       </div>
 

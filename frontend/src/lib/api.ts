@@ -10,6 +10,8 @@ export class ApiError extends Error {
   }
 }
 
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/$/, '');
+
 export async function api<T = unknown>(
   path: string,
   init: RequestInit = {}
@@ -21,7 +23,8 @@ export async function api<T = unknown>(
   const token = getToken();
   if (token) headers.set('Authorization', `Bearer ${token}`);
 
-  const res = await fetch(path, { ...init, headers, cache: 'no-store' });
+  const url = API_BASE && path.startsWith('/api/') ? `${API_BASE}${path}` : path;
+  const res = await fetch(url, { ...init, headers, cache: 'no-store' });
 
   if (res.status === 401) {
     clearToken();

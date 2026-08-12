@@ -41,10 +41,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen grid md:grid-cols-2 bg-paper">
       <div className="hidden md:flex flex-col justify-between p-10 border-r hairline">
-        <div className="flex items-center gap-2">
-          <span className="w-6 h-6 rounded-sm bg-ink flex items-center justify-center text-paper text-[11px] font-semibold">I</span>
-          <span className="text-[15px] font-semibold tracking-tight">Inventra</span>
-        </div>
+        <div className="text-[15px] font-semibold tracking-tight">Inventra</div>
         <div className="max-w-md">
           <div className="eyebrow mb-3">Small business, serious tooling</div>
           <p className="text-[22px] leading-snug tracking-tight text-ink">
