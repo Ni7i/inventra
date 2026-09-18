@@ -44,7 +44,7 @@ export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputE
       ref={ref}
       className={cn(
         'w-full h-9 px-2.5 text-sm bg-paper-card border border-line rounded',
-        'placeholder:text-ink-faint focus:border-accent focus:outline-none',
+        'placeholder:text-ink-faint focus:border-accent focus:outline-hidden',
         className
       )}
       {...rest}
@@ -60,7 +60,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
       ref={ref}
       className={cn(
         'w-full h-9 px-2.5 text-sm bg-paper-card border border-line rounded',
-        'focus:border-accent focus:outline-none',
+        'focus:border-accent focus:outline-hidden',
         className
       )}
       {...rest}
@@ -78,7 +78,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
       ref={ref}
       className={cn(
         'w-full px-2.5 py-2 text-sm bg-paper-card border border-line rounded',
-        'placeholder:text-ink-faint focus:border-accent focus:outline-none',
+        'placeholder:text-ink-faint focus:border-accent focus:outline-hidden',
         className
       )}
       {...rest}

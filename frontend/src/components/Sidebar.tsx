@@ -61,7 +61,7 @@ export function Sidebar({ user }: { user: CurrentUser | null }) {
                         className={cn(
                           'flex items-center h-8 px-4 text-[13.5px]',
                           active
-                            ? 'text-ink font-medium bg-paper-hover border-l-2 border-accent -ml-[1px]'
+                            ? 'text-ink font-medium bg-paper-hover border-l-2 border-accent -ml-px'
                             : 'text-ink-muted hover:text-ink hover:bg-paper-hover'
                         )}
                       >

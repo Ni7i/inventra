@@ -106,7 +106,7 @@ function RevenueBars({ series }: { series: { date: string; revenue: number }[] }
         const h = Math.max(4, Math.round((pt.revenue / max) * 140));
         return (
           <div key={pt.date} className="flex-1 flex flex-col items-center gap-1 group">
-            <div className="w-full bg-accent/70 group-hover:bg-accent rounded-sm" style={{ height: h }} title={`${pt.date}: ${pt.revenue}`} />
+            <div className="w-full bg-accent/70 group-hover:bg-accent rounded-xs" style={{ height: h }} title={`${pt.date}: ${pt.revenue}`} />
             <div className="text-[10px] text-ink-muted">{new Date(pt.date).getDate()}</div>
           </div>
         );
