@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { api, ApiError } from '@/lib/api';
 import { getUser, hasRole } from '@/lib/auth';
@@ -19,29 +19,24 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+  const [loadedQuery, setLoadedQuery] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const user = getUser();
   const canEdit = hasRole(user, ['Admin', 'Manager']);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (search) params.set('search', search);
-      if (categoryId) params.set('categoryId', categoryId);
-      const data = await api<Product[]>(`/api/products?${params}`);
-      setRows(data);
-    } catch (e) {
-      setError(e instanceof ApiError ? e.detail || e.message : String(e));
-    } finally {
-      setLoading(false);
-    }
-  }, [search, categoryId]);
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  if (categoryId) params.set('categoryId', categoryId);
+  const query = params.toString();
+  const loading = loadedQuery !== query;
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    api<Product[]>(`/api/products?${query}`)
+      .then(data => { setRows(data); setError(null); })
+      .catch(e => setError(e instanceof ApiError ? e.detail || e.message : String(e)))
+      .finally(() => setLoadedQuery(query));
+  }, [query]);
   useEffect(() => { api<Category[]>('/api/categories').then(setCategories).catch(() => {}); }, []);
 
   return (

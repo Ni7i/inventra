@@ -23,7 +23,15 @@ export function getToken(): string | null {
 
 export function getUser(): CurrentUser | null {
   if (typeof window === 'undefined') return null;
-  const raw = localStorage.getItem(USER_KEY);
+  return parseUser(localStorage.getItem(USER_KEY));
+}
+
+/** Raw stored session user, suitable as a `useSyncExternalStore` snapshot. */
+export function getStoredUserRaw(): string {
+  return localStorage.getItem(USER_KEY) ?? '';
+}
+
+export function parseUser(raw: string | null): CurrentUser | null {
   if (!raw) return null;
   try { return JSON.parse(raw) as CurrentUser; } catch { return null; }
 }

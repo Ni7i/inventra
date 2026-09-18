@@ -29,8 +29,9 @@ export default function OrderDetailPage() {
   const user = getUser();
   const canAct = hasRole(user, ['Admin', 'Manager']);
 
-  const load = () => api<Order>(`/api/orders/${orderId}`).then(setOrder).catch(e => setError(String(e)));
-  useEffect(() => { void load(); }, [orderId]);
+  useEffect(() => {
+    api<Order>(`/api/orders/${orderId}`).then(setOrder).catch(e => setError(String(e)));
+  }, [orderId]);
 
   async function run(action: 'confirm' | 'ship' | 'cancel') {
     setWorking(true); setError(null);

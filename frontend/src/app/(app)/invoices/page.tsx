@@ -28,11 +28,11 @@ export default function InvoicesPage() {
   const user = getUser();
   const canAct = hasRole(user, ['Admin', 'Manager']);
 
-  const load = useCallback(async () => {
+  const load = useCallback(() => {
     const params = new URLSearchParams();
     if (status) params.set('status', status);
-    try { setRows(await api<Invoice[]>(`/api/invoices?${params}`)); }
-    catch (e) { setError(String(e)); }
+    return api<Invoice[]>(`/api/invoices?${params}`)
+      .then(setRows, e => setError(String(e)));
   }, [status]);
 
   useEffect(() => { void load(); }, [load]);

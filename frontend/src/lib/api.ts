@@ -29,6 +29,9 @@ export async function api<T = unknown>(
   if (res.status === 401) {
     clearToken();
     if (typeof window !== 'undefined' && !path.endsWith('/api/auth/login')) {
+      // Hard navigation on purpose: this helper runs outside React, and a full
+      // reload drops any client state belonging to the expired session.
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       window.location.href = '/login';
     }
     throw new ApiError(401, 'Unauthorized');

@@ -27,11 +27,11 @@ export default function OrdersPage() {
   const [status, setStatus] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(() => {
     const params = new URLSearchParams();
     if (status) params.set('status', status);
-    try { setRows(await api<Order[]>(`/api/orders?${params}`)); }
-    catch (e) { setError(String(e)); }
+    return api<Order[]>(`/api/orders?${params}`)
+      .then(setRows, e => setError(String(e)));
   }, [status]);
 
   useEffect(() => { void load(); }, [load]);

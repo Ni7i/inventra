@@ -1,25 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUser, CurrentUser } from '@/lib/auth';
+import { getStoredUserRaw, parseUser } from '@/lib/auth';
 import { Sidebar } from '@/components/Sidebar';
 import { Topbar } from '@/components/Topbar';
 
+const subscribeToStorage = (onChange: () => void) => {
+  window.addEventListener('storage', onChange);
+  return () => window.removeEventListener('storage', onChange);
+};
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const [user, setUser] = useState<CurrentUser | null>(null);
-  const [ready, setReady] = useState(false);
+  // null while rendering on the server / hydrating, '' when there is no session.
+  const rawUser = useSyncExternalStore<string | null>(subscribeToStorage, getStoredUserRaw, () => null);
+  const user = useMemo(() => parseUser(rawUser), [rawUser]);
+  const ready = user !== null;
 
   useEffect(() => {
-    const u = getUser();
-    if (!u) {
-      router.replace('/login');
-      return;
-    }
-    setUser(u);
-    setReady(true);
-  }, [router]);
+    if (rawUser !== null && !user) router.replace('/login');
+  }, [rawUser, user, router]);
 
   if (!ready) {
     return <div className="min-h-screen flex items-center justify-center text-[13px] text-ink-muted">Loading…</div>;

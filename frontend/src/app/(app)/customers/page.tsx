@@ -25,11 +25,11 @@ export default function CustomersPage() {
   const user = getUser();
   const canEdit = hasRole(user, ['Admin', 'Manager']);
 
-  const load = useCallback(async () => {
+  const load = useCallback(() => {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
-    try { setRows(await api<Customer[]>(`/api/customers?${params}`)); }
-    catch (e) { setError(String(e)); }
+    return api<Customer[]>(`/api/customers?${params}`)
+      .then(setRows, e => setError(String(e)));
   }, [search]);
 
   useEffect(() => { void load(); }, [load]);
