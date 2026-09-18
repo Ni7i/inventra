@@ -1,6 +1,6 @@
 # Inventra
 
-Inventory, orders and invoicing for small businesses. A full-stack portfolio project — **Next.js 14** on **.NET 8** with **PostgreSQL**, fully Dockerised, tested, and CI-checked.
+Inventory, orders and invoicing for small businesses. A full-stack portfolio project — **Next.js 16** on **.NET 10** with **PostgreSQL**, fully Dockerised, tested, and CI-checked.
 
 Built as a real product an actual KMU could use for their day-to-day: track SKUs, manage stock, take orders, ship them, invoice, and see how the month is going.
 
@@ -10,11 +10,11 @@ Built as a real product an actual KMU could use for their day-to-day: track SKUs
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Next.js 14 (App Router) · TypeScript · Tailwind CSS |
-| Backend | ASP.NET Core 8 · Entity Framework Core 8 |
-| Database | PostgreSQL 16 |
+| Frontend | Next.js 16 (App Router) · React 19 · TypeScript 6 · Tailwind CSS 4 |
+| Backend | ASP.NET Core 10 · Entity Framework Core 10 (Npgsql) · FluentValidation 12 · OpenAPI + Scalar |
+| Database | PostgreSQL 17 |
 | Auth | JWT (Bearer) · BCrypt · role-based policies |
-| Tests | xUnit + FluentAssertions (backend) · Next `build` + `tsc` (frontend) |
+| Tests | xUnit v3 + AwesomeAssertions on Microsoft.Testing.Platform (backend) · Vitest + ESLint 9 + `tsc` + Next `build` (frontend) |
 | Container | Docker · docker compose |
 | CI | GitHub Actions (backend tests, frontend build, docker build) |
 
@@ -57,18 +57,20 @@ docker compose up --build
 Then open:
 
 - Web UI — <http://localhost:3000>
-- API + Swagger — <http://localhost:5080/swagger>
+- API — <http://localhost:5080> (OpenAPI document and Scalar UI are enabled in Development only, see [API](#api))
 - Postgres — `localhost:5432` (`inventra` / `inventra` / `inventra`)
 
 The API applies EF Core migrations and seeds demo data on first boot.
+
+> Upgrading from an older checkout that ran PostgreSQL 16? The `inventra-pg` volume holds a v16 data directory that PostgreSQL 17 cannot open. Recreate it with `docker compose down -v` (this deletes local demo data) before `docker compose up --build`.
 
 ## Run it locally (without Docker)
 
 ### Prerequisites
 
-- .NET SDK 8
-- Node 20
-- PostgreSQL 16 running on `localhost:5432` with a database named `inventra`
+- .NET SDK 10
+- Node 24
+- PostgreSQL 17 running on `localhost:5432` with a database named `inventra`
 
 ### Backend
 
@@ -100,11 +102,13 @@ dotnet test
 
 # Frontend
 cd frontend
+npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
 
-Backend has 11 tests covering the password hasher, product CRUD/validation, and the full order lifecycle (draft → confirm → cancel, including stock reduction and refund on cancel).
+Backend has 14 tests covering the password hasher, product CRUD/validation, request validators, and the full order lifecycle (draft → confirm → cancel, including stock reduction and refund on cancel). `dotnet test` runs on Microsoft.Testing.Platform (configured in `backend/global.json`). Frontend unit tests (Vitest) cover the formatting helpers.
 
 ---
 
@@ -121,7 +125,9 @@ inventra/
 │   │   ├── Dtos/
 │   │   ├── Middleware/         # ExceptionHandlingMiddleware + typed exceptions
 │   │   ├── Migrations/         # EF Core migrations
-│   │   └── Services/           # ProductService, OrderService, InvoiceService, StatsService
+│   │   ├── OpenApi/            # OpenAPI document transformers (JWT bearer scheme)
+│   │   ├── Services/           # ProductService, OrderService, InvoiceService, StatsService
+│   │   └── Validation/         # FluentValidation request validators + MVC filter
 │   └── tests/Inventra.Api.Tests/
 ├── frontend/
 │   └── src/
@@ -163,7 +169,7 @@ Selected endpoints — all under `/api`:
 | `POST` | `/invoices` · `/invoices/{id}/mark-paid` · `/mark-overdue` | Manager+ |
 | `GET` | `/stats/dashboard` · `/stats/low-stock` | any |
 
-Full Swagger UI at `/swagger` in Development.
+In Development the OpenAPI document is served at `/openapi/v1.json` and the Scalar API reference at `/scalar`.
 
 ## License
 
