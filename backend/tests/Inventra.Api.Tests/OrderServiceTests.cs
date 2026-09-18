@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using Inventra.Api.Domain;
 using Inventra.Api.Dtos;
 using Inventra.Api.Middleware;
@@ -47,7 +47,7 @@ public class OrderServiceTests
         var confirmed = await svc.ConfirmAsync(order.Id);
         confirmed.Status.Should().Be(OrderStatus.Confirmed);
 
-        var product = await db.Products.FindAsync(pid);
+        var product = await db.Products.FindAsync([pid], TestContext.Current.CancellationToken);
         product!.StockOnHand.Should().Be(6);
     }
 
@@ -73,7 +73,7 @@ public class OrderServiceTests
         await svc.ConfirmAsync(order.Id);
 
         await svc.CancelAsync(order.Id);
-        var product = await db.Products.FindAsync(pid);
+        var product = await db.Products.FindAsync([pid], TestContext.Current.CancellationToken);
         product!.StockOnHand.Should().Be(10);
     }
 }

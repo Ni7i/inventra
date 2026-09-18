@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using Inventra.Api.Auth;
 
 namespace Inventra.Api.Tests;

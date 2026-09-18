@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using Inventra.Api.Dtos;
 using Inventra.Api.Validation;
 
